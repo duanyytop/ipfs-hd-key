@@ -2,19 +2,25 @@
   "name": "ipfs-hd-key",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "tsc",
+    "start": "npx tsx src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "module",
   "packageManager": "pnpm@10.11.0",
   "dependencies": {
+    "@libp2p/crypto": "^5.1.5",
+    "helia": "^5.4.2",
+    "libp2p": "^2.8.9",
     "viem": "^2.31.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.1",
-    "ts-node": "^10.9.2"
+    "tsx": "^4.20.3"
   }
 }
