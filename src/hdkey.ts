@@ -7,10 +7,10 @@ const IPFS_PATH = `m/1229997651'/0'/0`;
 const ORBITDB_PATH = `m/1768644974'/0'/0`;
 
 const testAcpAddress = async () => {
-  const mnemonicStr = 'solar snow traffic keep blade antique hold ginger clarify flock leaf mouse';
+  const mnemonicStr = "solar snow traffic keep blade antique hold ginger clarify flock leaf mouse";
   const seed = mnemonic.mnemonicToSeedSync(mnemonicStr);
   const extendedPrivateKey = ExtendedPrivateKey.fromSeed(seed);
-  const keychain = Keychain.fromSeed(Buffer.from(extendedPrivateKey.serialize(), 'hex'));
+  const keychain = Keychain.fromSeed(Buffer.from(extendedPrivateKey.serialize(), "hex"));
 
   const ckbChildKey = keychain.derivePath(CKB_PATH);
   console.log(`CKB child key: ${`0x${Buffer.from(ckbChildKey.privateKey).toString("hex")}`}`);
@@ -22,17 +22,36 @@ const testAcpAddress = async () => {
   console.log(`OrbitDB child key: ${`0x${Buffer.from(orbitdbChildKey.privateKey).toString("hex")}`}`);
 
   // export keystore
-  const keystore = Keystore.create(extendedPrivateKey, 'password');
-  const keystoreJson = keystore.toJson()
-  // console.log(`Keystore JSON: ${JSON.stringify(keystoreJson)}`);
-
+  /**
+   {
+    "version": 3,
+    "crypto": {
+        "ciphertext": "a313e280590f786190604a550f1e476d8c6a9ecf3c23724bfc3ffd42af98496649d909ea4ba0bfb1e2d6d74ac5adf86412ba4bc1698686eb2a284eb15d815d8e",
+        "cipherparams": {
+            "iv": "3c763f0627b6b3dc4a1ed75ef171e310"
+        },
+        "cipher": "aes-128-ctr",
+        "kdf": "scrypt",
+        "kdfparams": {
+            "dklen": 32,
+            "salt": "95f3ab0eb3768027df551fb29a0d942c9571974afb370f95ed14f2e59229cfe0",
+            "n": 262144,
+            "r": 8,
+            "p": 1
+        },
+        "mac": "c977004f5f9b59d0d59964e3e09acd0e12bbe67587921084dded9408b50b9b7c"
+      },
+      "id": "fe5fb210-335f-4439-ae41-152b9f1da703"
+    }
+   */
+  const keystore = Keystore.create(extendedPrivateKey, "password");
+  const keystoreJson = keystore.toJson();
+  console.log(`Keystore JSON: ${keystoreJson}`);
 
   // Recover key from keystore
   const recover = Keystore.fromJson(keystoreJson);
   const recoveredExtendedPrivateKey = recover.extendedPrivateKey("password");
-  const recoveredKeychain = Keychain.fromSeed(
-    Buffer.from(recoveredExtendedPrivateKey.serialize(), 'hex'),
-  );
+  const recoveredKeychain = Keychain.fromSeed(Buffer.from(recoveredExtendedPrivateKey.serialize(), "hex"));
 
   const recoveredCkbChildKey = recoveredKeychain.derivePath(CKB_PATH).privateKey;
   console.log(`recovered CKB child key: ${`0x${Buffer.from(recoveredCkbChildKey).toString("hex")}`}`);
