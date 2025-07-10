@@ -6,7 +6,7 @@ const { privateKeyFromRaw } = keys;
 
 // IPFS Default Path
 // Avoid using existing derivation paths:https://github.com/satoshilabs/slips/blob/master/slip-0044.md 
-const defaultPath = `m/44'/8154'/0'/0/0`
+const defaultPath = `m/44'/8154'/0`
 
 const run = async () => {
   const seed = "c8215abbe6ca79553182a54f403bcf9bee415adf3f415e46661f0f5bd6d245ab";
@@ -16,6 +16,8 @@ const run = async () => {
   const ipfsKeyHex = Buffer.from(hdkey).toString("hex");
   const privateKeyBytes = Uint8Array.from(Buffer.from(ipfsKeyHex, "hex"));
   const privateKey = await privateKeyFromRaw(privateKeyBytes);
+
+  console.log(`privateKey: ${ipfsKeyHex}`);
 
   const node = await createLibp2p({
     privateKey,
