@@ -7,11 +7,14 @@ const IPFS_PATH = `m/1229997651'/0'/0`;
 const ORBITDB_PATH = `m/1768644974'/0'/0`;
 
 const testAcpAddress = async () => {
+  mnemonic.generateMnemonic()
   const mnemonicStr = "solar snow traffic keep blade antique hold ginger clarify flock leaf mouse";
   const seed = mnemonic.mnemonicToSeedSync(mnemonicStr);
   const extendedPrivateKey = ExtendedPrivateKey.fromSeed(seed);
-  const keychain = Keychain.fromSeed(Buffer.from(extendedPrivateKey.serialize(), "hex"));
+  const root = extendedPrivateKey.serialize()
+  console.log("root", root);
 
+  const keychain = Keychain.fromSeed(Buffer.from(root, "hex"));
   const ckbChildKey = keychain.derivePath(CKB_PATH);
   console.log(`CKB child key: ${`0x${Buffer.from(ckbChildKey.privateKey).toString("hex")}`}`);
 
@@ -51,8 +54,10 @@ const testAcpAddress = async () => {
   // Recover key from keystore
   const recover = Keystore.fromJson(keystoreJson);
   const recoveredExtendedPrivateKey = recover.extendedPrivateKey("password");
-  const recoveredKeychain = Keychain.fromSeed(Buffer.from(recoveredExtendedPrivateKey.serialize(), "hex"));
+  const recoveredRoot = recoveredExtendedPrivateKey.serialize();
+  console.log("Recovered root", recoveredRoot);
 
+  const recoveredKeychain = Keychain.fromSeed(Buffer.from(recoveredRoot, "hex"));
   const recoveredCkbChildKey = recoveredKeychain.derivePath(CKB_PATH).privateKey;
   console.log(`recovered CKB child key: ${`0x${Buffer.from(recoveredCkbChildKey).toString("hex")}`}`);
 
